@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="./bootstrap-5.0.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./main.css">
+    <link rel="icon" href="./images/Egyptian_Air_Defense_Forces_insignia.png">
+    <title>أرشيف مجموعة أمن الفرقة ٥ دجو</title>
+    <script type="text/javascript">
+        const ipc = window.require('electron').ipcRenderer;
+  
+        function createDataEntryWindow(){
+            ipc.send("createDataEntryWindow");  
+        }
+
+        function createDataRetrievalWindow(){
+            ipc.send("createDataRetrievalWindow"); 
+        }
+    </script>
+</head>
+
+<body style="background-color:white;">
+    <div class="container" style="background-color: darkgoldenrod; border-style: solid;">
+        <div class="row" style>
+            <div class="col float-left">
+                <img class="rounded .img-fluid." src="./images/Egyptian_Air_Defense_Forces_insignia.png" style="width: 100%;">
+            </div>
+            <div class="col align-items-center">
+                <h1 style="margin-top: 40%; color:white;"> مجموعة أمن الفرقة ٥ دجو </h1>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="border-style: solid;">
+        <div class="row">
+            <div class="col" style="padding-right: 0%; padding-left: 0%">
+                <button onclick="createDataEntryWindow()" class="btn-warning" style="width: 100%; height: 50px;">
+                    حفظ كارت اجتماعي
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="padding-right: 0%; padding-left: 0%">
+                <button onclick="createDataRetrievalWindow()" class="btn-warning" style="width: 100%; height: 50px;">
+                    بحث عن كارت اجتماعي
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

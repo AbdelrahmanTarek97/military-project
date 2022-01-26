@@ -1,0 +1,19 @@
+{
+  "name": "military-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@electron/remote": "github:electron/remote",
+    "electron": "^16.0.7",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.34",
+    "nedb-async": "^0.1.6"
+  }
+}

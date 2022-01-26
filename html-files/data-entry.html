@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../bootstrap-5.0.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../main.css">
+    <link rel="icon" href="../images/Egyptian_Air_Defense_Forces_insignia.png">
+    <title>  مجموعة أمن الفرقة ٥ دجو </title>
+    <script type="text/javascript">
+    const ipc = window.require('electron').ipcRenderer;
+  
+    function goToFirstWindow(){
+        try {
+            ipc.send("closeDataEntryWindow");    
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    async function sendFormData(){
+        try {
+            let data = {
+                image : document.getElementById('image').files[0].path,
+                militaryNumber : document.getElementById('militaryNumber').value,
+                rank : document.getElementById('rank').value,
+                name : document.getElementById('name').value,
+                unit : document.getElementById('unit').value,
+                dateOfEnlistment : document.getElementById('dateOfEnlistment').value,
+                dateOfExit : document.getElementById('dateOfExit').value,
+                dateOfBirth : document.getElementById('dateOfBirth').value,
+                age : document.getElementById('age').value,
+                phoneNumber : document.getElementById('phoneNumber').value,
+                address : document.getElementById('address').value,
+                education : document.getElementById('education').value,
+                jobBeforeEnlistment : document.getElementById('jobBeforeEnlistment').value,
+                maritalStatus : document.getElementById('maritalStatus').value,
+                numberOfChildren : document.getElementById('numberOfChildren').value,
+                closestRelative : document.getElementById('closestRelative').value,
+                closestRelativeType : document.getElementById('closestRelativeType').value,
+                closestRelativePhoneNumber : document.getElementById('closestRelativePhoneNumber').value,
+                religion : document.getElementById('religion').value,
+                bloodType : document.getElementById('bloodType').value,
+                numberOfSiblings : document.getElementById('numberOfSiblings').value,
+                sportActivity : document.getElementById('sportActivity').value,
+                isASmoker : document.getElementById('isASmoker').value,
+                shoeSize : document.getElementById('shoeSize').value,
+                overallSize : document.getElementById('overallSize').value,
+                securityConcerns : document.getElementById('securityConcerns').value,
+            }
+            let {success, message} = await ipc.invoke("socialCard", {functionName : "insert", data});
+            alert(message);
+        } catch (err) {
+            alert(err)
+        }
+    }
+
+    </script>
+</head>
+
+<body style="background-color:white;"">
+    <div class="container">
+        <div class="row">
+            <div class="col" style="width: 100%; padding-left: 0%; padding-right: 0%;">
+                <button class="btn-danger" onclick="goToFirstWindow()" style="width: 100%; height: 50px; font-size: 25px;">
+                   عودة للصفحة الرئيسية 
+                  </button>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="background-color: darkgoldenrod; border-style: solid;">
+        <div class="row">
+            <div class="col float-left">
+                <img class="rounded .img-fluid." src="../images/Egyptian_Air_Defense_Forces_insignia.png" style="width: 100%;">
+            </div>
+            <div class="col align-items-center">
+                <h1 style="margin-top: 40%; color:white;"> مجموعة أمن الفرقة ٥ دجو </h1>
+            </div>
+        </div>
+    </div>
+    <!-- Here starts the form for the data entry -->
+    <div id="formDiv" class="container align-items-center" style="border-style: solid;">
+        <form id="socialCardForm">
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="file" id="image" name="imageInput">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="image"> الصورة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="militaryNumber" name="militaryNumberTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="militaryNumber"> رقم عسكري </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="rank" name="rankTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="rank"> ‏الدرجة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="name" name="nameTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="name"> الاسم </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="unit" name="unitTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="unit"> الوحدة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="dateOfEnlistment" name="dateOfEnlistmentTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="dateOfEnlistment"> تاريخ التجنيد  </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="dateOfExit" name="dateOfExitTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="dateOfExit"> تاريخ التسريح </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="dateOfBirth" name="dateOfBirthTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="dateOfBirth"> تاريخ الميلاد </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="age" name="ageTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="age"> السن </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="phoneNumber" name="phoneNumberTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="phoneNumber"> رقم التليفون </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <textarea class="form-control" type="text" id="address" name="addressTxt" rows="3"> </textarea>
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="address"> العنوان المدني </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="education" name="educationTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="education"> المؤهل الدراسي </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="jobBeforeEnlistment" name="jobBeforeEnlistmentTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="jobBeforeEnlistment"> الوظيفة قبل التجنيد </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="maritalStatus" name="maritalStatusTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="maritalStatus"> الحالة الإجتماعية </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="numberOfChildren" name="numberOfChildrenTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="numberOfChildren"> عدد الأبناء </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="closestRelative" name="closestRelativeTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="closestRelative"> أقرب الأقارب </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="closestRelativeType" name="closestRelativeTypeTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="closestRelativeType"> الصفة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="closestRelativePhoneNumber" name="closestRelativePhoneNumberTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="closestRelativePhoneNumber"> رقم الهاتف </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="religion" name="religionTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="religion"> الديانة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="bloodType" name="bloodTypeTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="bloodType"> فصيلة الدم </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="numberOfSiblings" name="numberOfSiblingsTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="numberOfSiblings"> عدد الأخوة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="sportActivity" name="sportActivityTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="sportActivity"> النشاط الرياضي </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="isASmoker" name="isASmokerTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="isASmoker"> حالة التدخين </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="shoeSize" name="shoeSizeTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="shoeSizeTxt"> مقاس البيادة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="text" id="overallSize" name="overallSizeTxt">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="overallSize"> مقاس الأفارول </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <textarea class="form-control" type="text" id="securityConcerns" name="securityConcernsTxt" rows="3"></textarea>
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="securityConcerns"> موقف أمني </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col" style="padding-top: 30px; padding-bottom: 20px;">
+                    <input onclick="sendFormData()" class = "form-control btn-warning" type="submit"  value="حفظ" style="width: 100%;">
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
