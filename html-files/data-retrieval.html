@@ -7,6 +7,9 @@
     <title> مجموعة أمن الفرقة ٥ دجو</title>
     <script type="text/javascript">
     const ipc = window.require('electron').ipcRenderer;
+    const shell = require('electron').shell;
+    const resolve = require('path').resolve;
+    const { jsPDF } = require("jspdf");
     
     function goToFirstWindow(){
         try {
@@ -47,12 +50,12 @@
                 isASmoker,
                 shoeSize,
                 overallSize,
-                securityConcerns    
+                securityConcerns   
         } = data;
 
             try {
                 document.getElementById('dateOfEntry').value = dateOfEntry?? '';
-                document.getElementById('image').src = `../social-card-images/${image}`?? ''; 
+                document.getElementById('image').src = resolve(image) ?? ''; 
                 document.getElementById('militaryNumber').value = militaryNumber?? '';
                 document.getElementById('rank').value = rank?? '';
                 document.getElementById('name').value = name?? '';  
@@ -78,6 +81,12 @@
                 document.getElementById('shoeSize').value = shoeSize?? ''; 
                 document.getElementById('overallSize').value = overallSize?? ''; 
                 document.getElementById('securityConcerns').value = securityConcerns?? '';
+               
+                let path = resolve(__dirname + '../../../documents/'+ data.document);
+                let message = await shell.openPath(path);
+                if(message && message.length>0)
+                    alert(message + " " + path);
+        
             } catch (err) {
                 alert(err);
             }
@@ -115,7 +124,7 @@
                 document.getElementById('image').src = "";
             }
             else{
-                currentResultIndex++;
+                currentResultIndex = (currentResultIndex + 1) % searchResults.length;
                 displayData(searchResults[currentResultIndex % searchResults.length]);
                 document.getElementById("deleteBtn").disabled = false;
                 document.getElementById("updateBtn").disabled = false;
@@ -124,6 +133,7 @@
                 for (var i = 0, len = elements.length; i < len; ++i) {
                     elements[i].disabled = false;
                 }
+                document.getElementById("searchResultslbl").textContent = `نتيجة ${searchResults.length} من  ${currentResultIndex+1}`;
             }
         } catch (err) {
             alert(err);
@@ -133,7 +143,7 @@
     async function deleteRecord(){
         try {
             let {success, message, data} = await ipc.invoke("socialCard", {functionName : "delete", data : searchResults[currentResultIndex]});
-            if(success){
+            if(success){    
                 searchResults.splice(currentResultIndex, 1);
                 currentResultIndex--;
                 next();
@@ -177,23 +187,34 @@
                 shoeSize : document.getElementById('shoeSize').value,
                 overallSize : document.getElementById('overallSize').value,
                 securityConcerns : document.getElementById('securityConcerns').value,
+                image : document.getElementById('imageInput').files[0]?.path ?? searchResults[currentResultIndex].image,
+                document : document.getElementById('document').files[0]?.path ?? resolve("../documents/" + searchResults[currentResultIndex].document),
             };
             let {success, message} = await ipc.invoke("socialCard", {functionName : "update", data});
             alert(message);
+            currentResultIndex = -1;
+            next();
         } catch (err) {
             alert(err)
         }
     }
-    
+
+    function convertToPDF(){
+        try {
+            ipc.invoke('print-to-pdf', {name : searchResults[currentResultIndex].militaryNumber + ".pdf"});
+        } catch (err) {
+            alert(err)
+        }
+    }
    </script>
 </head>
-<body style="background-color:white;"">
-    <div class="container">
+<body style="background-color:white;">
+    <div class="container pdf-ignore">
         <div class="row">
             <div class="col" style="width: 100%; padding-left: 0%; padding-right: 0%;">
                 <button class="btn-danger" onclick="goToFirstWindow()" style="width: 100%; height: 50px; font-size: 25px;">
                    عودة للصفحة الرئيسية 
-                  </button>
+                </button>
             </div>
         </div>
     </div>
@@ -214,6 +235,9 @@
                     <br> <input enabled class="form-control" type="text" id="search" name="searchTxt">
                 </div>
             </div>
+            <div class="row">
+                <br> <label id="searchResultslbl"> ٠ من ٠ نتيجة </label>
+            </div>
             <div class="row" style="padding-top: 30px; padding-bottom: 30px;">
                 <div class="col" style="align-items: center;">
                     <button onclick="next()" class = "form-control btn-warning" style="width: 100%; font-size: 100%;"> النتيجة التالية </button>
@@ -232,7 +256,7 @@
                     <br> <input disabled class="form-control" type="text" id="dateOfEntry" name="dateOfEntryTxt">
                 </div>
                 <div class="col">
-                    <br><label class="form-label" for="dateOfEntry"> تاريخ آخر تعديل للمعلومات  </label>
+                    <br> <label class="form-label" for="dateOfEntry"> تاريخ آخر تعديل للمعلومات  </label>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -245,6 +269,25 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
+                    <br> <input disabled class="form-control pdf-ignore" type="file" id="imageInput" name="imageInput"  accept="image/x-png,image/gif,image/jpeg">
+                </div>
+                <div class="col">
+                    <br><label class="form-label pdf-ignore" for="imageInput"> تغيير الصورة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input disabled class="form-control pdf-ignore" type="file" id="document" name="documentInput" accept=
+                    "application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                    text/plain, application/pdf, image/*,
+                    application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.slideshow">
+                </div>
+                <div class="col">
+                    <br><label class="form-label pdf-ignore" for="document">تغيير الملف المرفق </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
                     <br> <input disabled class="form-control" type="text" id="militaryNumber" name="militaryNumberTxt">
                 </div>
                 <div class="col">
@@ -253,7 +296,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="rank" name="rankTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="rank" name="rankTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="rank"> ‏الدرجة </label>
@@ -261,7 +304,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="name" name="nameTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="name" name="nameTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="name"> الاسم </label>
@@ -269,7 +312,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="unit" name="unitTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="unit" name="unitTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="unit"> الوحدة </label>
@@ -277,7 +320,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="dateOfEnlistment" name="dateOfEnlistmentTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="dateOfEnlistment" name="dateOfEnlistmentTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfEnlistment"> تاريخ التجنيد  </label>
@@ -285,7 +328,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="dateOfExit" name="dateOfExitTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="dateOfExit" name="dateOfExitTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfExit"> تاريخ التسريح </label>
@@ -293,7 +336,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="dateOfBirth" name="dateOfBirthTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="dateOfBirth" name="dateOfBirthTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfBirth"> تاريخ الميلاد </label>
@@ -301,7 +344,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="age" name="ageTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="age" name="ageTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="age"> السن </label>
@@ -317,7 +360,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <textarea disabled  class="form-control" type="text" id="address" name="addressTxt" rows="3"> </textarea>
+                    <br> <textarea disabled  class="form-control form-text" type="text" id="address" name="addressTxt" rows="3"> </textarea>
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="address"> العنوان المدني </label>
@@ -325,7 +368,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="education" name="educationTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="education" name="educationTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="education"> المؤهل الدراسي </label>
@@ -333,7 +376,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="jobBeforeEnlistment" name="jobBeforeEnlistmentTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="jobBeforeEnlistment" name="jobBeforeEnlistmentTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="jobBeforeEnlistment"> الوظيفة قبل التجنيد </label>
@@ -341,7 +384,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="maritalStatus" name="maritalStatusTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="maritalStatus" name="maritalStatusTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="maritalStatus"> الحالة الإجتماعية </label>
@@ -349,7 +392,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="numberOfChildren" name="numberOfChildrenTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="numberOfChildren" name="numberOfChildrenTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="numberOfChildren"> عدد الأبناء </label>
@@ -357,7 +400,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="closestRelative" name="closestRelativeTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="closestRelative" name="closestRelativeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="closestRelative"> أقرب الأقارب </label>
@@ -365,7 +408,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="closestRelativeType" name="closestRelativeTypeTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="closestRelativeType" name="closestRelativeTypeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="closestRelativeType"> الصفة </label>
@@ -381,7 +424,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="religion" name="religionTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="religion" name="religionTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="religion"> الديانة </label>
@@ -389,7 +432,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="bloodType" name="bloodTypeTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="bloodType" name="bloodTypeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="bloodType"> فصيلة الدم </label>
@@ -397,7 +440,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="numberOfSiblings" name="numberOfSiblingsTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="numberOfSiblings" name="numberOfSiblingsTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="numberOfSiblings"> عدد الأخوة </label>
@@ -405,7 +448,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="sportActivity" name="sportActivityTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="sportActivity" name="sportActivityTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="sportActivity"> النشاط الرياضي </label>
@@ -413,7 +456,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="isASmoker" name="isASmokerTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="isASmoker" name="isASmokerTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="isASmoker"> حالة التدخين </label>
@@ -421,7 +464,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="shoeSize" name="shoeSizeTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="shoeSize" name="shoeSizeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="shoeSizeTxt"> مقاس البيادة </label>
@@ -429,7 +472,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input disabled class="form-control" type="text" id="overallSize" name="overallSizeTxt">
+                    <br> <input disabled class="form-control form-text" type="text" id="overallSize" name="overallSizeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="overallSize"> مقاس الأفارول </label>
@@ -437,7 +480,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <textarea disabled class="form-control" type="text" id="securityConcerns" name="securityConcernsTxt" rows="3"></textarea>
+                    <br> <textarea disabled class="form-control form-text" type="text" id="securityConcerns" name="securityConcernsTxt" rows="3"></textarea>
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="securityConcerns"> موقف أمني </label>
@@ -445,10 +488,13 @@
             </div>
             <div class="row align-items-center">
                 <div class="col" style="padding-top: 30px; padding-bottom: 20px;">
-                    <input disabled onclick="updateRecord()" class = "form-control btn-warning" id='updateBtn' type="button"  value="تعديل" style="width: 100%;">
+                    <input disabled onclick="updateRecord()" class = "pdf-ignore form-control btn-warning" id='updateBtn' type="button"  value="تعديل" style="width: 100%;">
                 </div>
                 <div class="col" style="padding-top: 30px; padding-bottom: 20px;">
-                    <input disabled onclick="deleteRecord()" class = "form-control btn-danger" id='deleteBtn' type="button"  value="مسح" style="width: 100%;">
+                    <input disabled onclick="deleteRecord()" class = "pdf-ignore form-control btn-danger" id='deleteBtn' type="button"  value="مسح" style="width: 100%;">
+                </div>
+                <div class="col" style="padding-top: 30px; padding-bottom: 20px;">
+                    <input disabled onclick="convertToPDF()" class = "pdf-ignore form-control btn-success" id='printBtn' type="button"  value="طباعة" style="width: 100%;">
                 </div>
             </div>
         </form>

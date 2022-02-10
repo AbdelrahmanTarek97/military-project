@@ -1,19 +1,23 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, shell,webContents } = require('electron')
 const moment = require('moment');
 const momentTz = require('moment-timezone');
 moment.tz.setDefault('Africa/Cairo');
 const fs = require('fs');
 // Type 3: Persistent datastore with automatic loading
 const { AsyncNedb } = require('nedb-async')
+const resolve = require('path').resolve;
+
 
 const db = new AsyncNedb({
-  filename: 'database.db',
+  filename: ('../database.db').replace('/app.asar', ''),
   autoload: true,
 })
 
 let mainWindow;
 let dataEntryWindow;
 let dataRetrievalWindow;
+
+
 
 // A function that creates a window within the electron app
 function createWindow() {
@@ -27,7 +31,7 @@ function createWindow() {
         },
         show: false,
     })
-    win.loadFile('index.html')
+    win.loadFile(__dirname + "/index.html");
     win.show();
     mainWindow = win;
 }
@@ -115,11 +119,25 @@ ipcMain.handle('socialCard', async (event, args) => {
                 throw Error("هذا الرقم العسكري موجود بالفعل. لا يمكن ادخال أكثر من كارت اجتماعي لنفس الرقم العسكري.")
             }
 
-            let imageName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.image.split('.')).at(-1)}`;
-            await fs.copyFile(data.image,`./social-card-images/${imageName}`, (err) => {
-                if (err) throw Error('يجب إدخال صورة');
-            })
-            data.image = imageName;
+            if(!data.militaryNumber || data.militaryNumber.length == 0){
+                throw Error("يجب ادخال رقم عسكري")
+            }
+
+            if(data.image){
+                let imageName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.image.split('.')).at(-1)}`;
+                await fs.copyFile(data.image,`../social-card-images/${imageName}`, (err) => {
+                    if (err) throw Error('يجب إدخال صورة');
+                })
+                data.image = imageName;
+            }
+
+            if(data.document){
+                let documentName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.document.split('.')).at(-1)}`;
+                await fs.copyFile(data.document,`../documents/${documentName}`, (err) => {
+                    if (err) throw Error('يجب إدخال ملف');
+                })
+                data.document = documentName;
+            }
             await db.asyncInsert({dateOfEntry : moment().format("YYYY-MM-DD HH:mm:ss.SS") ,...data});
             return {success : true, message : 'تم ادخال المعلومات بنجاح'}
         } catch (error) {
@@ -129,6 +147,22 @@ ipcMain.handle('socialCard', async (event, args) => {
     }
     else if(functionName == 'update'){
         try {
+            console.log(data.image);
+            if(data.image){
+                let imageName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.image.split('.')).at(-1)}`;
+                await fs.copyFile(data.image,`../social-card-images/${imageName}`, (err) => {
+                    if (err) throw Error('يجب إدخال صورة');
+                })
+                data.image = imageName;
+            }
+            console.log(data.document);
+            if(data.document){
+                let documentName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.document.split('.')).at(-1)}`;
+                await fs.copyFile(data.document,`../documents/${documentName}`, (err) => {
+                    if (err) throw Error('يجب إدخال ملف');
+                })
+                data.document = documentName;
+            }
             await db.asyncUpdate({_id : data._id}, {dateOfEntry : moment().format("YYYY-MM-DD HH:mm:ss.SS") ,...data});
             return {success : true, message : 'تم تحديث البيانات بنجاح'};
         } catch (err) {
@@ -143,7 +177,7 @@ ipcMain.handle('socialCard', async (event, args) => {
         }
         await db.asyncRemove({militaryNumber : data.militaryNumber});
         let imageName = `${data.militaryNumber.length? data.militaryNumber : currentTime}.${(data.image.split('.')).at(-1)}`;
-        await fs.rm(`./social-card-images/${imageName}`, (err) => {});
+        await fs.rm(`../social-card-images/${imageName}`, (err) => {});
 
         return {success : true, message : 'تم مسح الكارت الإجتماعي بنجاح'}
     }
@@ -158,6 +192,10 @@ ipcMain.handle('socialCard', async (event, args) => {
             if(docs.length === 0){
                 throw Error("لا يوجد كارت إجتماعي بهذه المعطيات")
             }
+
+            for(let doc of docs){
+                doc.image = __dirname + "/../social-card-images/" +  doc.image;
+            }
             return {success : true, message : "", data : docs};
         } catch (error) {
             return {success : false, message : error};
@@ -165,6 +203,28 @@ ipcMain.handle('socialCard', async (event, args) => {
     }
     
 });
+
+function pdfSettings() {
+    var paperSizeArray = ["A4", "A5"];
+    var option = {
+        landscape: false,
+        marginsType: 0,
+        printBackground: false,
+        printSelectionOnly: false,
+        pageSize: paperSizeArray[0],
+    };
+  return option;
+}
+
+ipcMain.handle('print-to-pdf', async (event, args)=>{
+    dataRetrievalWindow.webContents.printToPDF(pdfSettings()).then(data => {
+        fs.writeFileSync('../tmp/'+ args.name, data, (err) => {
+          if (err) throw err
+        })
+        shell.openPath(resolve('../tmp/'+ args.name));
+      }
+    )
+})
 
 // When ready hook for electron
 app.whenReady().then(() => {

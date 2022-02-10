@@ -5,15 +5,39 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder -w",
+    "package-win": "electron-packager . قيافر٥ دجو --platform=win32 --arch=x64"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@electron/remote": "github:electron/remote",
-    "electron": "^16.0.7",
+    "jspdf": "^2.5.1",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "nedb-async": "^0.1.6"
+  },
+  "devDependencies": {
+    "electron": "^16.0.7",
+    "electron-builder": "^22.14.13",
+    "electron-packager": "^15.4.0"
+  },
+  "files": [
+    "build",
+    "*.js",
+    "public"
+  ],
+  "build": {
+    "appId": "com.example.electron-cra",
+    "files": [
+      "**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "extraResources": [
+      "database.db"
+    ]
   }
 }

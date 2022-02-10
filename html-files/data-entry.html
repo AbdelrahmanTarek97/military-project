@@ -20,6 +20,7 @@
         try {
             let data = {
                 image : document.getElementById('image').files[0].path,
+                document : document.getElementById('document').files[0].path,
                 militaryNumber : document.getElementById('militaryNumber').value,
                 rank : document.getElementById('rank').value,
                 name : document.getElementById('name').value,
@@ -62,7 +63,7 @@
             <div class="col" style="width: 100%; padding-left: 0%; padding-right: 0%;">
                 <button class="btn-danger" onclick="goToFirstWindow()" style="width: 100%; height: 50px; font-size: 25px;">
                    عودة للصفحة الرئيسية 
-                  </button>
+                </button>
             </div>
         </div>
     </div>
@@ -81,10 +82,21 @@
         <form id="socialCardForm">
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="file" id="image" name="imageInput">
+                    <br> <input class="form-control" type="file" id="image" name="imageInput"  accept="image/x-png,image/gif,image/jpeg">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="image"> الصورة </label>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <br> <input class="form-control" type="file" id="document" name="documentInput" accept=
+                    "application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+                    text/plain, application/pdf, image/*,
+                    application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.slideshow">
+                </div>
+                <div class="col">
+                    <br><label class="form-label" for="document"> الملف المرفق </label>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -97,7 +109,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="rank" name="rankTxt">
+                    <br> <input class="form-control form-text" type="text" id="rank" name="rankTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="rank"> ‏الدرجة </label>
@@ -105,7 +117,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="name" name="nameTxt">
+                    <br> <input class="form-control form-text" type="text" id="name" name="nameTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="name"> الاسم </label>
@@ -113,7 +125,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="unit" name="unitTxt">
+                    <br> <input class="form-control form-text" type="text" id="unit" name="unitTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="unit"> الوحدة </label>
@@ -121,7 +133,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="dateOfEnlistment" name="dateOfEnlistmentTxt">
+                    <br> <input class="form-control form-text" type="text" id="dateOfEnlistment" name="dateOfEnlistmentTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfEnlistment"> تاريخ التجنيد  </label>
@@ -129,7 +141,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="dateOfExit" name="dateOfExitTxt">
+                    <br> <input class="form-control form-text" type="text" id="dateOfExit" name="dateOfExitTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfExit"> تاريخ التسريح </label>
@@ -137,7 +149,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="dateOfBirth" name="dateOfBirthTxt">
+                    <br> <input class="form-control form-text" type="text" id="dateOfBirth" name="dateOfBirthTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="dateOfBirth"> تاريخ الميلاد </label>
@@ -145,7 +157,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="age" name="ageTxt">
+                    <br> <input class="form-control form-text" type="text" id="age" name="ageTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="age"> السن </label>
@@ -161,7 +173,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <textarea class="form-control" type="text" id="address" name="addressTxt" rows="3"> </textarea>
+                    <br> <textarea class="form-control form-text" type="text" id="address" name="addressTxt" rows="3"> </textarea>
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="address"> العنوان المدني </label>
@@ -169,7 +181,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="education" name="educationTxt">
+                    <br> <input class="form-control form-text" type="text" id="education" name="educationTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="education"> المؤهل الدراسي </label>
@@ -177,7 +189,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="jobBeforeEnlistment" name="jobBeforeEnlistmentTxt">
+                    <br> <input class="form-control form-text" type="text" id="jobBeforeEnlistment" name="jobBeforeEnlistmentTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="jobBeforeEnlistment"> الوظيفة قبل التجنيد </label>
@@ -185,7 +197,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="maritalStatus" name="maritalStatusTxt">
+                    <br> <input class="form-control form-text" type="text" id="maritalStatus" name="maritalStatusTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="maritalStatus"> الحالة الإجتماعية </label>
@@ -193,7 +205,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="numberOfChildren" name="numberOfChildrenTxt">
+                    <br> <input class="form-control form-text" type="text" id="numberOfChildren" name="numberOfChildrenTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="numberOfChildren"> عدد الأبناء </label>
@@ -201,7 +213,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="closestRelative" name="closestRelativeTxt">
+                    <br> <input class="form-control form-text" type="text" id="closestRelative" name="closestRelativeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="closestRelative"> أقرب الأقارب </label>
@@ -209,7 +221,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="closestRelativeType" name="closestRelativeTypeTxt">
+                    <br> <input class="form-control form-text" type="text" id="closestRelativeType" name="closestRelativeTypeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="closestRelativeType"> الصفة </label>
@@ -225,7 +237,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="religion" name="religionTxt">
+                    <br> <input class="form-control form-text" type="text" id="religion" name="religionTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="religion"> الديانة </label>
@@ -233,7 +245,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="bloodType" name="bloodTypeTxt">
+                    <br> <input class="form-control form-text" type="text" id="bloodType" name="bloodTypeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="bloodType"> فصيلة الدم </label>
@@ -241,7 +253,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="numberOfSiblings" name="numberOfSiblingsTxt">
+                    <br> <input class="form-control form-text" type="text" id="numberOfSiblings" name="numberOfSiblingsTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="numberOfSiblings"> عدد الأخوة </label>
@@ -249,7 +261,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="sportActivity" name="sportActivityTxt">
+                    <br> <input class="form-control form-text" type="text" id="sportActivity" name="sportActivityTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="sportActivity"> النشاط الرياضي </label>
@@ -257,7 +269,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="isASmoker" name="isASmokerTxt">
+                    <br> <input class="form-control form-text" type="text" id="isASmoker" name="isASmokerTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="isASmoker"> حالة التدخين </label>
@@ -265,7 +277,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="shoeSize" name="shoeSizeTxt">
+                    <br> <input class="form-control form-text" type="text" id="shoeSize" name="shoeSizeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="shoeSizeTxt"> مقاس البيادة </label>
@@ -273,7 +285,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <input class="form-control" type="text" id="overallSize" name="overallSizeTxt">
+                    <br> <input class="form-control form-text" type="text" id="overallSize" name="overallSizeTxt">
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="overallSize"> مقاس الأفارول </label>
@@ -281,7 +293,7 @@
             </div>
             <div class="row align-items-center">
                 <div class="col">
-                    <br> <textarea class="form-control" type="text" id="securityConcerns" name="securityConcernsTxt" rows="3"></textarea>
+                    <br> <textarea class="form-control form-text" type="text" id="securityConcerns" name="securityConcernsTxt" rows="3"></textarea>
                 </div>
                 <div class="col">
                     <br><label class="form-label" for="securityConcerns"> موقف أمني </label>
