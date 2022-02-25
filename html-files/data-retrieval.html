@@ -55,7 +55,7 @@
 
             try {
                 document.getElementById('dateOfEntry').value = dateOfEntry?? '';
-                document.getElementById('image').src = resolve(image) ?? ''; 
+                document.getElementById('image').src = image ?? ''; 
                 document.getElementById('militaryNumber').value = militaryNumber?? '';
                 document.getElementById('rank').value = rank?? '';
                 document.getElementById('name').value = name?? '';  
@@ -82,7 +82,7 @@
                 document.getElementById('overallSize').value = overallSize?? ''; 
                 document.getElementById('securityConcerns').value = securityConcerns?? '';
                
-                let path = resolve(__dirname + '../../../documents/'+ data.document);
+                let path = data.document;
                 let message = await shell.openPath(path);
                 if(message && message.length>0)
                     alert(message + " " + path);

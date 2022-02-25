@@ -194,8 +194,11 @@ ipcMain.handle('socialCard', async (event, args) => {
             }
 
             for(let doc of docs){
-                doc.image = __dirname + "/../social-card-images/" +  doc.image;
+                doc.image = resolve("../social-card-images/" +  doc.image);
+                doc.document = resolve( "../documents/" +  doc.document);
             }
+
+            
             return {success : true, message : "", data : docs};
         } catch (error) {
             return {success : false, message : error};
